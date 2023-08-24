@@ -1,0 +1,5 @@
+C:\Users\hanis\OneDrive\Documents\GitHub\BankApiTestProject\BankApiTestProject\obj\Debug\net6.0\BankApiTestProject.csproj.AssemblyReference.cache
+C:\Users\hanis\OneDrive\Documents\GitHub\BankApiTestProject\BankApiTestProject\obj\Debug\net6.0\BankApiTestProject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hanis\OneDrive\Documents\GitHub\BankApiTestProject\BankApiTestProject\obj\Debug\net6.0\BankApiTestProject.AssemblyInfoInputs.cache
+C:\Users\hanis\OneDrive\Documents\GitHub\BankApiTestProject\BankApiTestProject\obj\Debug\net6.0\BankApiTestProject.AssemblyInfo.cs
+C:\Users\hanis\OneDrive\Documents\GitHub\BankApiTestProject\BankApiTestProject\obj\Debug\net6.0\BankApiTestProject.csproj.CoreCompileInputs.cache

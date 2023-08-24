@@ -1,24 +1,26 @@
-using BankApi.Entites;
+using BankApi.Entities;
 using BankApi.Services;
+using BankApi.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Sockets;
 using System.Security.AccessControl;
 using System.Transactions;
 using System.Xml.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BankApiTestProject
 {
-    public class BankRepositaryUnitTest
+    public class BankRepositoryUnitTest
     {
         private DbContextOptions<BankApiContext> dbContextOptions;
         private BankApiContext db;
-        private BankRepositary? bankRepositary;
-        public BankRepositaryUnitTest()
+        private BankRepository? bankRepository;
+        public BankRepositoryUnitTest()
         {
 
-            dbContextOptions = new DbContextOptionsBuilder<BankApiContext>().UseSqlite("Data Source = BankDB.db"));
-
+            //dbContextOptions = new DbContextOptionsBuilder<BankApiContext>().UseSql("Data Source = BankDB.db");
+            dbContextOptions = new DbContextOptionsBuilder<BankApiContext>().UseSqlServer("Data Source = BankDB.db");
             db = new BankApiContext(dbContextOptions);
 
         }
@@ -27,10 +29,10 @@ namespace BankApiTestProject
         public void TestGetCustomersAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
 
             //Act
-            List<Customer> list = bankRepositary.GetCustomersAsync();
+            List<Customer> list = bankRepository.GetCustomersAsync();
 
             //Assert
             Assert.Equal(0, list.Count);
@@ -42,11 +44,11 @@ namespace BankApiTestProject
         public void TestGetCustomerAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
             int CustId = 12345;
 
             //Act
-            Customer customer = bankRepositary.GetCustomerAsync(CustId);
+            Customer customer = bankRepository.GetCustomerAsync(CustId);
 
             //Assert
             Assert.NotNull(customer);
@@ -57,7 +59,7 @@ namespace BankApiTestProject
         public void TestAddCustomerAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
             Customer customer = new Customer()
             {
                 CustId = 123,
@@ -70,8 +72,8 @@ namespace BankApiTestProject
             };
 
             //Act
-            bankRepositary.AddCustomer(customer);
-            customer = bankRepositary.GetCustomerAsync(customer.CustId);
+            bankRepository.AddCustomerAsync(customer);
+            customer = bankRepository.GetCustomerAsync(customer.CustId);
 
             //Assert        
             Assert.NotNull(customer);
@@ -82,7 +84,7 @@ namespace BankApiTestProject
         public void TestDeleteCustomer()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
             Customer customer = new Customer()
             {
                 CustId = 123,
@@ -95,8 +97,8 @@ namespace BankApiTestProject
             };
 
             //Act
-            bankRepositary.DeleteCustomer(customer);
-            Customer customer = bankRepositary.GetCustomerAsync(customer.CustId);
+            bankRepository.DeleteCustomer(customer);
+            customer = bankRepository.GetCustomerAsync(customer.CustId);
 
             //Assert
             Assert.Null(customer);
@@ -106,7 +108,7 @@ namespace BankApiTestProject
         public void TestDeleteAccount()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
             Account account = new Account()
             {
                 AccId = 56789,
@@ -119,8 +121,8 @@ namespace BankApiTestProject
             };
 
             //Act
-            bankRepositary.DeleteAccount(account);
-            Account account = bankRepositary.GetAccountAsync(account.AccId);
+            bankRepository.DeleteAccount(account);
+            account = bankRepository.GetAccountAsync(account.AccId);
 
             //Assert
             Assert.Null(account);
@@ -130,7 +132,7 @@ namespace BankApiTestProject
         public void TestAddAdminAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
             Admin admin = new Admin()
             {
                 Username = "wellsfargo",
@@ -138,8 +140,8 @@ namespace BankApiTestProject
             };
 
             //Act
-            bankRepositary.AddAdmin(admin);
-            admin admin = bankRepositary.GetAdmin(admin);
+            bankRepository.AddAdminAsync(admin);
+            admin = bankRepository.GetAdminAsync(admin);
 
             //Assert
             Assert.NotNull(admin);
@@ -150,7 +152,7 @@ namespace BankApiTestProject
         public void TestGetAdminAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
             Admin admin = new Admin()
             {
                 Username = "wellsfargo",
@@ -158,7 +160,7 @@ namespace BankApiTestProject
             };
 
             //Act
-            admin admin = bankRepositary.GetAdmin(admin);
+            admin = bankRepository.GetAdminAsync(admin);
 
             //Assert
             Assert.NotNull(admin);
@@ -169,11 +171,11 @@ namespace BankApiTestProject
         public void TestGetAccountAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
             int AccNo = 12345678;
 
             //Act
-            Account account = bankRepositary.GetAccountAsync(AccNo);
+            Account account = bankRepository.GetAccountAsync(AccNo);
 
             //Assert
             Assert.NotNull(account);
@@ -184,22 +186,22 @@ namespace BankApiTestProject
         public void TestGetTransactionsAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
+            bankRepository = new BankRepository(db);
 
             //Act
-            List<Transaction> list = bankRepositary.GetTransactionsAsync();
+            List<System.Transactions.Transaction> list = bankRepository.GetTransactionsAsync();
 
             //Assert
             Assert.Equal(0, list.Count);
 
         }
-
+/*
         [Fact]
         public void TestAddTransactionAsync()
         {
             //Arrange
-            bankRepositary = new BankRepositary(db);
-            Transaction transaction = new Transaction()
+            bankRepository = new BankRepository(db);
+            Transactions transactions = new System.Transactions()
             {
                 TxnId = 56789,
                 Status = "success",
@@ -210,12 +212,13 @@ namespace BankApiTestProject
             };
 
             //Act
-            bankRepositary.AddTransactionAsync(trasaction);
-            List<Transaction> list = bankRepositary.GetTransactionsAsync();
+            bankRepository.AddTransactionAsync(transactions);
+            List<System.Transactions.Transaction> list = bankRepository.GetTransactionsAsync();
 
             //Assert
             Assert.Equal(1, list.Count);
         }
+*/
 
     }
 

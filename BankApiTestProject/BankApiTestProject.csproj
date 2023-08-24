@@ -32,4 +32,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="bank-api">
+      <HintPath>..\..\..\Desktop\bootcamp_project\bank-api\bin\Debug\net7.0\bank-api.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
